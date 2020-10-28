@@ -6,11 +6,13 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <form method="POST" action="/register">
+    <span id="success"></span>
+    <span id="error"></span>
+    <div>
       <input type="text" name="fullname" placeholder="Full Name">
       <input type="email" name="email" placeholder="bob@example.in">
       <input type="text" name="username" placeholder="Display Name"/>
-      <button type="submit" target="_self">Register</button>
-    </form>
+      <button type="submit" id="btnBegin">Register</button>
+    </div>
   </body>
 </html>

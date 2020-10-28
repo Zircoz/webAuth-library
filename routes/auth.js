@@ -17,7 +17,7 @@ router.get('/register', function(req, res, next) {
   res.render('register');
 });
 
-router.post('/register', function(req,res, next){
+router.post('/generate-attestation-options', function(req,res, next){
   User.exists({ displayname: req.body.username, email: req.body.email }, function(err, result) {
   if (err) {
     res.send(err);
@@ -25,10 +25,11 @@ router.post('/register', function(req,res, next){
     if(result==false) {
       var new_user = new User({ fullname: req.body.fullname, email: req.body.email, displayname: req.body.displayname });
       user1 = await new_user.save();
+      user1.then(
       const options = generateAttestationOptions({
         rpName,
         rpID,
-        userID: req.body.id, // refine this
+        userID: user1.email, // refine this
         userName: user1.displayname,
       // Don't prompt users for additional information about the authenticator
       // (Recommended for smoother UX)
@@ -42,9 +43,21 @@ router.post('/register', function(req,res, next){
       })),
       */
       });
+      let userWithCred = await User.findOneAndUpdate({email: user1.email}, {currentChallenge: options.challenge}, {new: true}).then(
+        let usersCookieData = {
+          email: user1.email
+        }
+        res.cookie("userData", usersCookieData, {maxAge: 120000});
+        res.send(options);
+      );
+    )
     }
   }
 });
+})
+//generate-attestation-options POST ENDS
 
-
+//verify-attestation POST starts
+router.post('/verify-attestation', function(req, res, next){
+  
 })

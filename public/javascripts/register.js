@@ -6,7 +6,10 @@ const { startAttestation } = SimpleWebAuthnBrowser;
   const elemSuccess = document.getElementById('success');
   // <span>/<p>/etc...
   const elemError = document.getElementById('error');
-
+  //form fields
+  var fullName = document.getElementsByName("fullname");
+  var userEmail = document.getElementsByName("email");
+  var userName = document.getElementByName("username");
   // Start attestation when the user clicks a button
   elemBegin.addEventListener('click', async () => {
     // Reset success/error messages
@@ -15,7 +18,17 @@ const { startAttestation } = SimpleWebAuthnBrowser;
 
     // GET attestation options from the endpoint that calls
     // @simplewebauthn/server -> generateAttestationOptions()
-    const resp = await fetch('/generate-attestation-options');
+    const resp = await fetch('/generate-attestation-options',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'applcation/json',
+      },
+      body: {
+        fullname: fullName,
+        email: userEmail,
+        username: userName,
+      }
+    });
 
     let attResp;
     try {
@@ -39,7 +52,7 @@ const { startAttestation } = SimpleWebAuthnBrowser;
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(attResp),
+      body: JSON.stringify(attResp)
     });
 
     // Wait for the results of verification
